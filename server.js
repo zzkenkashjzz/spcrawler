@@ -1,19 +1,40 @@
 const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-
 const app = express();
-app.use(cors());
-app.use(express.static('.'));
 
+app.use(express.static('public'));
+// Enable CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+// Proxy endpoint for fetching external URLs
 app.get('/fetch', async (req, res) => {
   const url = req.query.url;
+  if (!url) {
+    return res.status(400).json({ error: 'URL parameter is required' });
+  }
+
   try {
-    const response = await axios.get(url);
-    res.send(response.data);
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
+    const data = await response.text();
+    res.send(data);
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
-app.listen(8080, () => console.log('Server running on port 8080'));
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
