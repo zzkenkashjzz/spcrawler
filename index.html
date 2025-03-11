@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopify Crawler</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="crawler-container">
+      <div class="input-section">
+          <input type="text" id="baseUrl" placeholder="https://teecentury.com/collections/tumbler?page={page}" style="width: 400px;">
+          <input type="number" id="startPage" placeholder="Start Page">
+          <input type="number" id="endPage" placeholder="End Page">
+          <input type="file" id="sampleHtml" accept=".html" multiple>
+      </div>
+
+      <div class="control-section">
+          <button id="startBtn">Start</button>
+          <button id="pauseBtn">Pause</button>
+          <button id="stopBtn">Stop</button>
+          <button id="exportCsv">Export CSV</button>
+          <button id="exportJson">Export JSON</button>
+      </div>
+
+      <div class="tabs">
+          <div class="tab-headers">
+              <button class="tab-btn active" data-tab="logs">Logs</button>
+              <button class="tab-btn" data-tab="products">Products</button>
+          </div>
+          <div class="tab-content">
+              <div id="logs" class="tab-pane active"></div>
+              <div id="products" class="tab-pane"></div>
+          </div>
+      </div>
+  </div>
+
+  <script src="crawler.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

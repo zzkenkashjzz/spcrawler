@@ -1,0 +1,38 @@
+.crawler-container {
+  padding: 20px;
+}
+
+.input-section {
+  margin-bottom: 20px;
+}
+
+.input-section input {
+  margin: 5px;
+  padding: 5px;
+}
+
+.tab-headers {
+  border-bottom: 1px solid #ccc;
+}
+
+.tab-btn {
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  border-bottom: 2px solid blue;
+}
+
+.tab-pane {
+  display: none;
+  padding: 20px;
+  height: 400px;
+  overflow: auto;
+}
+
+.tab-pane.active {
+  display: block;
+}
