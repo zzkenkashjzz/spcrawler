@@ -1,15 +1,34 @@
-const express = require('express');
+import express from 'express';
+import fetch from 'node-fetch';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
-app.use(express.static('public'));
-// Enable CORS
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
+app.use(express.static('public', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
+
+// Set proper MIME types and serve static files
+app.use('/css', express.static(path.join(__dirname, 'public/css'), {
+    setHeaders: (res, path) => {
+      res.set('Content-Type', 'text/css');
+    }
+  }));
+
+app.get('/', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Proxy endpoint for fetching external URLs
 app.get('/fetch', async (req, res) => {
   const url = req.query.url;
   if (!url) {
@@ -27,11 +46,6 @@ app.get('/fetch', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
 });
 
 const port = process.env.PORT || 3000;
